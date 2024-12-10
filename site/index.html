@@ -14,27 +14,18 @@
         const apiUrl = `https://api.lanyard.rest/v1/users/${userId}`;
 
         try {
+            console.log('if you are seeing this you are cute')
             const response = await fetch(apiUrl);
             const data = await response.json();
-
             if (data.success) {
             const user = data.data.discord_user;
-            const status = data.data.discord_status;
-            const activities = data.data.activities;
 
             // Avatar-URL
             const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
-            document.getElementById("discord-avatar").src = avatarUrl;
             document.getElementById("avatar").src = avatarUrl;
 
             // Name und Status
             document.getElementById("discord-username").textContent = `${user.username}`;
-            document.getElementById("discord-name").textContent = `${user.global_name}`;
-            document.getElementById("discord-status").textContent = `Status: ${status}`;
-
-            // Aktivität anzeigen (falls vorhanden)
-            const activity = activities.length > 0 ? activities[0].name : "Keine Aktivität";
-            document.getElementById("discord-activity").textContent = `Aktivität: ${activity}`;
             }
         } catch (error) {
             console.error("Fehler beim Abrufen des Discord-Status:", error);
