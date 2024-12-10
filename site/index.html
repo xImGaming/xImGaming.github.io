@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xImGaming's Site</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <script>
+    async function fetchDiscordPresence() {
+        const userId = "907028319046885436"; // Deine Benutzer-ID
+        const apiUrl = `https://api.lanyard.rest/v1/users/${userId}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data.success) {
+            const user = data.data.discord_user;
+            const status = data.data.discord_status;
+            const activities = data.data.activities;
+
+            // Avatar-URL
+            const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
+            document.getElementById("discord-avatar").src = avatarUrl;
+            document.getElementById("avatar").src = avatarUrl;
+
+            // Name und Status
+            document.getElementById("discord-username").textContent = `${user.username}`;
+            document.getElementById("discord-name").textContent = `${user.global_name}`;
+            document.getElementById("discord-status").textContent = `Status: ${status}`;
+
+            // Aktivität anzeigen (falls vorhanden)
+            const activity = activities.length > 0 ? activities[0].name : "Keine Aktivität";
+            document.getElementById("discord-activity").textContent = `Aktivität: ${activity}`;
+            }
+        } catch (error) {
+            console.error("Fehler beim Abrufen des Discord-Status:", error);
+        }
+    }
+
+    // Abruf starten
+    fetchDiscordPresence();
+
+
+
+    </script>
+  <div class="container">
+    <section class="about-me">
+      <h2>About Me</h2>
+      <img id="avatar" src="" alt="Profilbild" class="avatar" alt="Discord Profilbild" style="border-radius: 50%; width: 100px;">
+      <p>Hey! im <span id="discord-name" class="name">xImGaming</span>. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</p>
+    </section>
+    <section class="links">
+        <h2>My Social Links</h2>
+        <div class="links">
+          <a href="https://github.com" class="link-item" target="_blank">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          <!-- <a href="https://discordapp.com/channels/907028319046885436" class="link-item" target="_blank">
+            <i class="fab fa-discord"></i> Discord
+          </a> -->
+          <a href="https://anilist.co/user/xImGaming/" class="link-item">
+            <i class="fa-solid fa-star"></i> Anilist
+          </a>
+          <!-- <a href="#" class="link-item disabled">
+            <i class="fas fa-globe"></i> Webseite
+          </a> -->
+        </div>
+        <div>
+            <h3>My Discord Profile</h3>
+            <a href="https://discord.com/users/907028319046885436" target="_blank">
+              <img src="https://lanyard.cnrad.dev/api/907028319046885436" alt="Discord Presence">
+            </a>
+          </div>
+          
+          
+          
+          
+      </section>
+      
+    <footer>
+      <p>&copy; 2024 <span id="discord-name" class="name">xImGaming</span>. Alle Rechte vorbehalten.</p>
+    </footer>
+  </div>
+</body>
+</html>
