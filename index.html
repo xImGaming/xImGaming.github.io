@@ -1,68 +1,88 @@
-<html lang="en"><head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>xImGaming's Site</title>
-        <meta name="title" content="xImGaming's Site">
-        <meta name="description" content="xImGaming's stuff, what else?">
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="https://xImGaming.xyz/">
-        <meta property="og:title" content="xImGaming's Site">
-        <meta property="og:description" content="xImGaming's stuff, what else?">
-        <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="https://xImGaming.xyz/">
-        <meta property="twitter:title" content="xImGaming's Site">
-        <meta property="twitter:description" content="xImGaming's stuff, what else?">
-        <!--link rel="icon" href="https://cdn.piyushdev.ml/sites/piyushdev.ml/images/favicon.png" type="image/png"-->
-        <link rel="stylesheet" href="assets//style.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.min.css">
-        <style>
-            body,
-            html {
-                height: 100vh;
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>xImGaming's Site</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <!-- <link rel="stylesheet" href="style-2000.css"> -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  
+</head>
+<body>
+    <canvas class="background"></canvas>
+
+    <script>
+    async function fetchDiscordPresence() {
+        const userId = "907028319046885436";
+        const apiUrl = `https://api.lanyard.rest/v1/users/${userId}`;
+
+        try {
+            console.log('if you are seeing this you are cute')
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            if (data.success) {
+            const user = data.data.discord_user;
+
+            const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
+            document.getElementById("avatar").src = avatarUrl;
+
+            document.getElementById("discord-name").textContent = `${user.global_name}`;
             }
-            .background {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: -1;
-            }
-            .anilist:hover {
-                color: #e1306c;
-            }
-            .twitter:hover {
-                color: #1da1f3;
-            }
-        </style>
-        <title>xImGaming's Site</title>
-    </head>
-    <body class="bg-gray-800 select-none">
-        <div class="h-screen container sm:container mx-auto flex justify-center items-center">
-            <div class="text-center">
-                <div><img class="rounded-full h-48 w-48 mx-auto" src="https://avatars2.githubusercontent.com/xImGaming?s=180&amp;v=4%27" alt="Avatar"></div>
-                <div class="pt-4 px-6 font-mono mx-auto">
-                    <span class="text-teal-300 font-bold mx-auto text-2xl hover:text-green-400">xImGaming</span><br>
-                    <div class="pt-2"><span class="text-gray-300 mx-auto text-xl md:text-3xl hover:text-yellow-300">Yet another dev</span></div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-12 pt-5 gap-3 items-center">
-                    <button onclick="window.open(&quot;https://github.com/xImGaming&quot;,&quot;_blank&quot;)" class="col-span-1 md:col-span-6 bg-white px-4 py-3 w-32 rounded-md focus:outline-none text-gray-900 hover:text-gray-700 font-semibold font-sans flex justify-center items-center">
-                        <i class="ri-github-fill ri-lg"></i>&nbsp;Github
-                    </button>
-                    <button onclick="window.open(&quot;https://discord.gg/yHFUqf928Y&quot;,&quot;_blank&quot;)" class="col-span-1 md:col-span-6 bg-white px-4 py-3 w-32 rounded-md focus:outline-none text-gray-900 hover:text-indigo-500 font-semibold font-sans flex justify-center items-center">
-                        <i class="ri-discord-fill ri-lg"></i>&nbsp;Discord
-                    </button>
-                    <button onclick="window.open(&quot;https://anilist.noverado.de&quot;,&quot;_blank&quot;)" class="col-span-1 md:col-span-6 bg-white px-4 py-3 w-32 rounded-md focus:outline-none text-gray-900 anilist font-semibold font-sans flex justify-center items-center">
-                        <i class="ri-heart-fill ri-lg"></i>&nbsp;Anilist
-                    </button>
-                    <button onclick="window.open(&quot;https://twitter.com/xImGaming1&quot;,&quot;_blank&quot;)" class="col-span-1 md:col-span-6 bg-white px-4 py-3 w-32 rounded-md focus:outline-none text-gray-900 twitter font-semibold font-sans flex justify-center items-center">
-                        <i class="ri-twitter-fill ri-lg"></i>&nbsp;Twitter
-                    </button>
-                </div>
-                <canvas class="background" width="1277" height="869" style="width: 100%; height: 100%;"></canvas>
-            </div>
+        } catch (error) {
+            console.error("Fehler beim Abrufen des Discord-Status:", error);
+        }
+    }
+
+    // Abruf starten
+    fetchDiscordPresence();
+
+    function scrollToSection(section) {
+      document.getElementById(section).scrollIntoView({ behavior: 'smooth' });
+    }
+    </script>
+  <div class="container">
+    <section class="about-me">
+      <h2>About Me</h2>
+      <img id="avatar" src="" alt="Profilbild" class="avatar" alt="Discord Profilbild" style="border-radius: 50%; width: 100px;">
+      <p>Hey! I'm <span id="discord-name" class="name">xImGaming</span>. I'm a hobby programmer learning the languages <span class='name'>Java, JavaScript, HTML, CSS</span>.</p>
+    </section>
+    <section class="links">
+        <h2>My Social Links</h2>
+        <div class="links">
+          <a href="https://github.com/xImGaming" class="link-item" target="_blank">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          <a href='discord.com/user/907028319046885436' class="link-item" target="_blank">
+            <i class="fab fa-discord"></i> Discord
+          </a>
+          <a href="https://anilist.co/user/xImGaming/" class="link-item">
+            <i class="fa-solid fa-star"></i> Anilist
+          </a>
+          <!-- <a href="#" class="link-item disabled">
+            <i class="fas fa-globe"></i> Webseite
+          </a> -->
+          </a>
         </div>
-        <script src="assets//p.min.js"></script>
+    <section id="profile">
+      <div>
+        <h3>My Discord Profile</h3>
+        <a href="https://discord.com/users/907028319046885436" target="_blank">
+          <img src="https://lanyard.cnrad.dev/api/907028319046885436" alt="Discord Presence">
+        </a>
+      </div>
+    </section>
+          
+          
+          
+          
+      </section>
+      
+    <!-- <footer>
+      <p>&copy; 2024 <span id="discord-name" class="name">xImGaming</span>. Alle Rechte vorbehalten.</p>
+    </footer> -->
+  </div>
+  <script src="assets/p.min.js"></script>
         <script>
             window.onload = function () {
                 Particles.init({
@@ -77,6 +97,5 @@
                 });
             };
         </script>
-    
-
-<div id="torrent-scanner-popup" style="display: none;"></div></body></html>
+</body>
+</html>
