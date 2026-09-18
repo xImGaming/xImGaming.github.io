@@ -45,7 +45,12 @@
   body.entered #gate{ opacity:0; backdrop-filter:blur(0); -webkit-backdrop-filter:blur(0); pointer-events:none; }
 
   /* ---------- karte ---------- */
-  .stage{ position:relative; z-index:2; height:100%; display:grid; place-items:center; padding:24px 18px; overflow-y:auto; }
+  .stage{ position:relative; z-index:2; height:100%; overflow-y:auto;
+    scroll-snap-type:y mandatory; scroll-behavior:smooth;
+    scrollbar-width:none; -ms-overflow-style:none; }
+  .stage::-webkit-scrollbar{ display:none; }
+  .panel{ min-height:100%; display:grid; place-items:center; padding:24px 18px;
+    scroll-snap-align:start; box-sizing:border-box; }
   .tilt{ perspective:1200px; width:min(430px,100%); }
   .card{ position:relative; border-radius:26px; padding:34px 26px 0;
     background:var(--glass); border:1px solid var(--edge);
@@ -137,18 +142,45 @@
   @keyframes pulse{ 50%{ opacity:.35; } }
   .dot-sep{ opacity:.35; }
 
-  .player{ position:fixed; right:18px; bottom:18px; z-index:5; display:none; align-items:center; gap:0;
-    padding:9px; border-radius:999px; background:var(--glass); border:1px solid var(--edge);
-    backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); opacity:0;
-    transition:opacity .8s ease .5s, padding .25s ease; }
+  .player{ position:fixed; right:18px; bottom:18px; z-index:5; width:134px; height:44px; opacity:0;
+    transition:opacity .8s ease .5s; }
   body.entered .player{ opacity:1; }
-  .player:hover{ padding:9px 14px 9px 9px; }
-  .player button{ width:30px; height:30px; flex:0 0 30px; display:grid; place-items:center; border-radius:50%; cursor:pointer;
-    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); color:var(--text); }
-  .player svg{ width:14px; height:14px; }
-  .player input[type=range]{ width:0; opacity:0; margin-left:0; accent-color:var(--glow-a);
-    transition:width .25s ease, opacity .2s ease, margin-left .25s ease; }
-  .player:hover input[type=range]{ width:76px; opacity:1; margin-left:10px; }
+  .player button{ position:absolute; right:0; top:0; width:44px; height:44px; display:grid; place-items:center;
+    border-radius:14px; cursor:pointer; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.14);
+    backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); color:var(--text); transition:background .2s; }
+  .player button:hover{ background:rgba(255,255,255,.16); }
+  .player svg{ width:18px; height:18px; }
+  .player input[type=range]{ position:absolute; right:52px; top:50%; transform:translateY(-50%);
+    width:0; opacity:0; margin:0; accent-color:var(--glow-a); pointer-events:none;
+    transition:width .25s ease, opacity .2s ease; }
+  .player:hover input[type=range]{ width:76px; opacity:1; pointer-events:auto; }
+
+  .about-card{ padding:40px 32px; text-align:center; }
+  .about-icon{ display:grid; place-items:center; width:52px; height:52px; margin:0 auto 16px;
+    border-radius:16px; background:linear-gradient(145deg,rgba(110,231,255,.14),rgba(176,107,255,.14));
+    border:1px solid var(--edge); color:var(--glow-a); }
+  .about-icon svg{ width:24px; height:24px; }
+  .about-title{ font-family:var(--display); font-weight:700; font-size:1.4rem; margin:0;
+    letter-spacing:.03em; background:linear-gradient(100deg,var(--glow-a),var(--glow-b) 60%,var(--glow-c));
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .about-rule{ display:block; width:36px; height:2px; margin:14px auto 18px; border-radius:2px;
+    background:linear-gradient(90deg,var(--glow-a),var(--glow-b)); opacity:.6; }
+  .about-text{ margin:0; max-width:36ch; margin-inline:auto; font-size:.98rem; line-height:1.75; color:#c6c2e4; }
+
+  .scroll-hint{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); z-index:5;
+    display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--muted);
+    font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; opacity:0; pointer-events:none;
+    transition:opacity .5s ease; }
+  .scroll-hint.show{ opacity:.75; }
+  .scroll-hint svg{ width:15px; height:15px; animation:hintbounce 1.6s ease-in-out infinite; }
+  @keyframes hintbounce{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(5px); } }
+
+  .dots{ position:fixed; right:14px; top:50%; transform:translateY(-50%); z-index:6;
+    display:none; flex-direction:column; gap:8px; opacity:0; transition:opacity .8s ease .5s; }
+  body.entered .dots{ opacity:1; }
+  .dot{ width:5px; height:5px; padding:0; border-radius:50%; border:none; cursor:pointer;
+    background:rgba(255,255,255,.16); transition:background .25s, transform .25s; }
+  .dot.active{ background:rgba(255,255,255,.5); transform:scale(1.2); }
 
   :focus-visible{ outline:2px solid var(--glow-a); outline-offset:3px; }
   @media (max-width:420px){

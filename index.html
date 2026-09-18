@@ -22,7 +22,8 @@
   <p class="g-hint" id="gateHint">klick irgendwo zum betreten</p>
 </div></div>
 
-<div class="stage"><div class="tilt" id="tilt">
+<div class="stage" id="stage">
+<section class="panel"><div class="tilt" id="tilt">
   <main class="card" id="card">
     <div class="av-wrap">
       <span class="av-ring"></span>
@@ -54,7 +55,29 @@
       <span class="live off" id="liveDot"><i></i><span id="liveText">verbinde…</span></span>
     </div>
   </main>
-</div></div>
+</div></section>
+
+<section class="panel"><div class="tilt">
+  <section class="card about-card">
+    <span class="about-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3l1.8 4.9L18.5 9l-4.7 1.9L12 15.8l-1.8-4.9L5.5 9l4.7-1.9z"/>
+        <path d="M19 15.5l.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8z"/>
+      </svg>
+    </span>
+    <h2 class="about-title">about me</h2>
+    <span class="about-rule"></span>
+    <p class="about-text" id="aboutText"></p>
+  </section>
+</div></section>
+</div>
+
+<div class="scroll-hint" id="scrollHint">
+  <span>scroll</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+</div>
+
+<div class="dots" id="dots" aria-label="abschnitte"></div>
 
 <div class="player" id="player">
   <button id="muteBtn" aria-label="stumm schalten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" id="muteIcon"></svg></button>
@@ -77,6 +100,7 @@ const CONFIG = {
   overrideHandle: "",    // leer = @discord-username verwenden
 
   bio:  "Hey Welcome to my Profile.",
+  aboutMe: "Schreib hier etwas mehr über dich rein — dieser Abschnitt hat seine eigene Karte, einfach runterscrollen.",
   tags: ["Hobby", "JavaScript", "Java"],
   verified: true,
 
@@ -123,6 +147,7 @@ document.documentElement.style.setProperty('--glow-b', CONFIG.accents.b);
 document.documentElement.style.setProperty('--glow-c', CONFIG.accents.c);
 $('#gateHint').textContent = CONFIG.gateHint;
 $('#bio').textContent = CONFIG.bio;
+$('#aboutText').textContent = CONFIG.aboutMe;
 if (!CONFIG.verified) $('#verified').remove();
 $('#tags').innerHTML = (CONFIG.tags || []).map(t => '<li>' + esc(t) + '</li>').join('');
 $('#socials').innerHTML = (CONFIG.links || []).map(l =>
@@ -369,6 +394,49 @@ if (CONFIG.music && CONFIG.music.src){
 }
 function setMuteIcon(muted){
   $('#muteIcon').innerHTML = muted ? ICON_MUTE : ICON_VOL;
+}
+
+/* ---- abschnitte / dots ---- */
+const stage = $('#stage');
+const panels = Array.from(document.querySelectorAll('.panel'));
+let activeIndex = 0;
+function goToPanel(i){
+  activeIndex = Math.max(0, Math.min(panels.length - 1, i));
+  panels[activeIndex].scrollIntoView({ behavior: 'smooth' });
+  $('#scrollHint').classList.toggle('show', activeIndex === 0);
+}
+const dots = panels.map((p, i) => {
+  const b = document.createElement('button');
+  b.className = 'dot';
+  b.setAttribute('aria-label', 'abschnitt ' + (i + 1));
+  b.addEventListener('click', () => goToPanel(i));
+  $('#dots').appendChild(b);
+  return b;
+});
+if (panels.length > 1){
+  $('#dots').style.display = 'flex';
+  $('#scrollHint').classList.add('show');
+  const panelObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const i = panels.indexOf(e.target);
+      dots[i].classList.toggle('active', e.isIntersecting);
+      if (e.isIntersecting){
+        activeIndex = i;
+        $('#scrollHint').classList.toggle('show', i === 0);
+      }
+    });
+  }, { root: stage, threshold: 0.6 });
+  panels.forEach(p => panelObserver.observe(p));
+
+  // ein Scroll (Rad/Trackpad) = direkt ein Abschnitt weiter, smooth animiert
+  let wheelLock = false;
+  stage.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelLock) return;
+    wheelLock = true;
+    goToPanel(activeIndex + (e.deltaY > 0 ? 1 : -1));
+    setTimeout(() => { wheelLock = false; }, 650);
+  }, { passive: false });
 }
 
 /* ---- gate ---- */
